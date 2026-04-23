@@ -58,6 +58,28 @@ Twoim zadaniem jest przygotowanie **pipeline CI/CD**, który automatycznie wdra�
 * instrukcję, jak zweryfikować, że deploy się wykonał (np. `docker ps` / logi).
 
  
+## Konfiguracja Deploymentu (CI/CD)
+
+### Wymagane GitHub Secrets
+Aby automatyczne wdrażanie działało, należy dodać następujące wpisy w ustawieniach repozytorium (`Settings -> Secrets and variables -> Actions`):
+
+`SERVER_HOST`: Adres IP Twojego serwera
+`SERVER_USER`: Nazwa użytkownika
+`SSH_PRIVATE_KEY`: Klucz prywatny SSH (wygenerowany komendą `ssh-keygen`)
+`PROJECT_PATH`: Ścieżka do folderu z projektem na serwerze
+`SERVER_PORT`: Port SSH, jeśli jest inny niż 22.
+
+### Pierwsze uruchomienie (First Deploy)
+1.  Zaloguj się na serwer i wykonaj jednorazowo `git clone` swojego repozytorium do ścieżki zdefiniowanej w `PROJECT_PATH`.
+2.  Skonfiguruj plik `.env` na serwerze (jeśli projekt go wymaga).
+3.  Dodaj powyższe `Secrets` do GitHub.
+4.  Wypchnij zmiany do gałęzi głównej: git push origin main
+
+### Jak zweryfikować, czy deploy się udał?
+1. Sprawdź zakładkę `Actions` w repozytorium — jeśli ikona jest zielona, komendy SSH zostały wykonane pomyślnie.
+2. Zaloguj się na serwer i wpisz `docker ps`. Powinieneś zobaczyć działający kontener `web` (lub inny zdefiniowany w docker-compose).
+3. Użyj komendy `docker compose logs -f web`, aby upewnić się, że Django wystartowało bez błędów.
+4. Sprawdź, czy baza danych jest aktualna i czy strona poprawnie wczytuje style CSS.
 
 > :no_entry: *Jeśli nie posiadasz materiałów do tego zadania tj. **PDF, projekt + Code Review**, znajdziesz je na stronie [devmentor.pl](https://devmentor.pl/workshop-django-deployment)*
 
